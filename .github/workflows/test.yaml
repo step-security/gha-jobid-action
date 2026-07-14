@@ -25,7 +25,7 @@ jobs:
           path: .github/actions/gha-jobid-action
       - name: Run action with options
         id: test1
-        uses: ./
+        uses: ./.github/actions/gha-jobid-action
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           job_name: "build-matrix (1)"
@@ -66,7 +66,7 @@ jobs:
           path: .github/actions/gha-jobid-action
       - name: Run action with options
         id: test1
-        uses: ./
+        uses: ./.github/actions/gha-jobid-action
         with:
           job_name: "build-matrix (1)"
           run_id: "6225949607"
@@ -105,7 +105,7 @@ jobs:
           path: .github/actions/gha-jobid-action
       - name: Run action with options
         id: test1
-        uses: ./
+        uses: ./.github/actions/gha-jobid-action
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           job_name: "build-matrix (1)"
@@ -113,7 +113,7 @@ jobs:
           run_id: "6225954167"
       - name: Run action with options
         id: test2
-        uses: ./
+        uses: ./.github/actions/gha-jobid-action
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           job_name: "build-matrix (2)"
@@ -121,7 +121,7 @@ jobs:
           run_id: "6225954167"
       - name: Run action with options
         id: test3
-        uses: ./
+        uses: ./.github/actions/gha-jobid-action
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           job_name: "build-matrix (3)"
@@ -166,7 +166,7 @@ jobs:
           path: .github/actions/gha-jobid-action
       - name: Run action with options
         id: test1
-        uses: ./
+        uses: ./.github/actions/gha-jobid-action
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           job_name: "build-matrix (1)"
@@ -174,7 +174,7 @@ jobs:
           run_id: "6225955888"
       - name: Run action with options
         id: test2
-        uses: ./
+        uses: ./.github/actions/gha-jobid-action
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           job_name: "build-matrix (2)"
@@ -182,7 +182,7 @@ jobs:
           run_id: "6225955888"
       - name: Run action with options
         id: test3
-        uses: ./
+        uses: ./.github/actions/gha-jobid-action
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           job_name: "build-matrix (31)"
