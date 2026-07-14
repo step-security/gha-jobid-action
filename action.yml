@@ -89,11 +89,23 @@ runs:
         INPUT_PER_PAGE: ${{ inputs.per_page }}
       shell: bash
       run: |
+        if ! [[ "${INPUT_RUN_ID}" =~ ^[0-9]+$ ]]; then
+          echo "::error::Invalid run_id '${INPUT_RUN_ID}': must be a positive integer."
+          exit 1
+        fi
+        if ! [[ "${INPUT_PER_PAGE}" =~ ^[0-9]+$ ]]; then
+          echo "::error::Invalid per_page '${INPUT_PER_PAGE}': must be a positive integer."
+          exit 1
+        fi
         GITHUB_API="/repos/${INPUT_REPOSITORY}/actions/runs/${INPUT_RUN_ID}/jobs"
         JOBINFO="$(curl --get -Ss -H "Authorization: Bearer ${INPUT_GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "${GITHUB_API_URL}${GITHUB_API}?per_page=${INPUT_PER_PAGE}")"
-        echo "${JOBINFO}" | grep "Resource not accessible by integration" &&  exit 1
+        if echo "${JOBINFO}" | grep -q "Resource not accessible by integration"; then
+          echo "::error::GitHub API returned 'Resource not accessible by integration'. Ensure the token has the required permissions."
+          exit 1
+        fi
         TOTAL_COUNT="$(echo "${JOBINFO}" | jq -r .total_count)"
-        eval "$(echo "${JOBINFO}" | jq -r --arg job_name "${INPUT_JOB_NAME}" '.jobs | map(select(.name == $job_name)) | .[0] | @sh "JOB_ID=\(.id) HTML_URL=\(.html_url)"')"
+        JOB_ID="$(echo "${JOBINFO}" | jq -r --arg job_name "${INPUT_JOB_NAME}" '.jobs | map(select(.name == $job_name)) | .[0] | .id')"
+        HTML_URL="$(echo "${JOBINFO}" | jq -r --arg job_name "${INPUT_JOB_NAME}" '.jobs | map(select(.name == $job_name)) | .[0] | .html_url')"
         echo "${JOB_ID}" | grep "null" > /dev/null && echo "parse error, job_id is ${JOB_ID} and total_count is ${TOTAL_COUNT}. 'job_name' or 'per_page' might be wrong. See https://github.com/Tiryoh/gha-jobid-action/blob/main/README.md#inputs" && exit 1
         echo "job_id=${JOB_ID}" >> "$GITHUB_OUTPUT"
         echo "html_url=${HTML_URL}" >> "$GITHUB_OUTPUT"
